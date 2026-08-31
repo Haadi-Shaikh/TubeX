@@ -89,6 +89,15 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     },
 
     {
+      $lookup: {
+        from: "dislikes",
+        localField: "_id",
+        foreignField: "video",
+        as: "dislikes",
+      },
+    },
+
+    {
       $addFields: {
         createdAt: {
           $dateToParts: { date: "$createdAt" },
@@ -96,6 +105,10 @@ const getChannelVideos = asyncHandler(async (req, res) => {
 
         likesCount: {
           $size: "$likes",
+        },
+
+        dislikesCount: {
+          $size: "$dislikes",
         },
       },
     },
@@ -120,6 +133,7 @@ const getChannelVideos = asyncHandler(async (req, res) => {
         },
         isPublished: 1,
         likesCount: 1,
+        dislikesCount: 1,
       },
     },
   ]);
