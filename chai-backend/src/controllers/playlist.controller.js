@@ -92,9 +92,9 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
     },
   ]);
 
-  // const userPlaylists = await Playlist.find({
-  //   owner: userId,
-  // });
+  if (!usersPlaylist) {
+    throw new ApiError(404, "Not Found or Existed");
+  }
 
   return res
     .status(200)
@@ -109,6 +109,11 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid Playlist ID");
+  }
+
+  const playlistExist = await Playlist.exists({ _id: playlistId });
+  if (!playlistExist) {
+    throw new ApiError(404, "Playlist is not exists");
   }
 
   const playlist = await Playlist.aggregate([
@@ -205,7 +210,9 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     },
   ]);
 
-  // const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    throw new ApiError(400, "Something went wrong");
+  }
 
   return res
     .status(200)
@@ -217,6 +224,11 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid Playlist ID");
+  }
+
+  const playlistExist = await Playlist.exists({ _id: playlistId });
+  if (!playlistExist) {
+    throw new ApiError(404, "Playlist is not exists");
   }
 
   if (!isValidObjectId(videoId)) {
@@ -262,6 +274,11 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Playlist ID");
   }
 
+  const playlistExist = await Playlist.exists({ _id: playlistId });
+  if (!playlistExist) {
+    throw new ApiError(404, "Playlist is not exists");
+  }
+
   const removeVideo = await Playlist.findOneAndUpdate(
     {
       _id: playlistId,
@@ -298,6 +315,11 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Playlist ID");
   }
 
+  const playlistExist = await Playlist.exists({ _id: playlistId });
+  if (!playlistExist) {
+    throw new ApiError(404, "Playlist is not exists");
+  }
+
   const deletedPlaylist = await Playlist.findOneAndDelete({
     _id: playlistId,
     owner: req.user?._id,
@@ -318,6 +340,11 @@ const updatePlaylist = asyncHandler(async (req, res) => {
 
   if (!isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid Playlist ID");
+  }
+
+  const playlistExist = await Playlist.exists({ _id: playlistId });
+  if (!playlistExist) {
+    throw new ApiError(404, "Playlist is not exists");
   }
 
   //TODO: update playlist
