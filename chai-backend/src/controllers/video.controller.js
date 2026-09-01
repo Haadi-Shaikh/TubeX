@@ -14,7 +14,7 @@ import { Dislike } from "../models/dislike.model.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  console.log(query);
+
   const pipeline = [];
 
   if (query) {
@@ -288,18 +288,21 @@ const getVideoById = asyncHandler(async (req, res) => {
   );
 
   // set this video to watchHistory
-  const setWatchHistory = await User.findByIdAndUpdate(
-    req.user?._id,
+ if(req.user?_id){
 
-    {
-      $addToSet: {
-        watchHistory: videoId,
+   await User.findByIdAndUpdate(
+      req.user?._id,
+  
+      {
+        $addToSet: {
+          watchHistory: videoId,
+        },
       },
-    },
-    {
-      returnDocument: "after",
-    }
-  );
+      {
+        returnDocument: "after",
+      }
+    );
+ }
 
   return res
     .status(200)

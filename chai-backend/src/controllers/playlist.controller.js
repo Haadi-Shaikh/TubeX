@@ -127,7 +127,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         pipleline: [
           {
             $match: {
-              "videos.isPublished": true,
+              isPublished: true,
             },
           },
         ],
