@@ -288,11 +288,10 @@ const getVideoById = asyncHandler(async (req, res) => {
   );
 
   // set this video to watchHistory
- if(req.user?_id){
-
-   await User.findByIdAndUpdate(
+  if (req.user?._id) {
+    await User.findByIdAndUpdate(
       req.user?._id,
-  
+
       {
         $addToSet: {
           watchHistory: videoId,
@@ -302,7 +301,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         returnDocument: "after",
       }
     );
- }
+  }
 
   return res
     .status(200)
