@@ -199,7 +199,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
               isSubscribe: {
                 $cond: {
-                  if: { $in: [req?.user._id, "$subscribers.subscriber"] }, // if my id is there then
+                  if: { $in: [req.user?._id, "$subscribers.subscriber"] }, // if my id is there then
                   then: true,
                   else: false,
                 },
